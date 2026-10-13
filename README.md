@@ -36,7 +36,7 @@ A **portfolio-only** Shopify storefront demo built on **Online Store 2.0** (Hori
 
 ## Design system
 
-- Background `#faf7f2`, foreground `#1f1f1f`, muted `#5a5a5a`, surface `#e8e3db`, terracotta accent `#c67b5c`.
+- Background `#faf7f2`, foreground `#1f1f1f`, muted `#5a5a5a`, surface `#e8e3db`, terracotta accent `#ab6245`.
 - Corner radii: global 14, product images 14, cards 10.
 - Typography: **Inter** (headings + body), with tuned letter-spacing and text wrapping.
 
@@ -47,6 +47,12 @@ A **portfolio-only** Shopify storefront demo built on **Online Store 2.0** (Hori
 - Hidden hero slides are marked `inert` (no focusable content in hidden slides).
 - The star rating uses `role="img"` with an accessible label; loading placeholders use a single `role="status"` region.
 - Benefits-bar label contrast was raised to **4.68:1** (WCAG AA).
+
+## Audit
+
+- **Lighthouse (mobile, authenticated):** Accessibility **0.97** · SEO **1.00** · Best Practices 0.73 · Performance ~0.5.
+- Homepage is **axe-clean**.
+- Performance / Best Practices are limited by Shopify platform scripts (Web Pixels Manager, analytics, account) and the admin preview bar, not the theme; product images are already served as WebP.
 
 ## Commerce safeguards
 
