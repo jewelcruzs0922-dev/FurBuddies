@@ -159,6 +159,13 @@ Shopify store build for a pet foods & items website (test/capability-run project
     - Best Practices fails are platform/environmental: `third-party-cookies`, `errors-in-console` (Shopify menus / section rendering), `inspector-issues`.
     - Performance: LCP 8.7s driven by large hero **PNG** images; the main lever is image optimization (resize/WebP).
   - Caveat: results are mobile-emulated and include the Shopify preview bar, so some console/third-party noise is platform-side.
+- 2026-10-13 (v18): Applied the Lighthouse fixes (approved):
+  - **Primary button contrast**: theme `palette_primary_button_background` / `_border` `#c67b5c` -> **`#ab6245`** (white text now **4.60:1**). Applies to every primary button (editorial CTA + add-to-cart).
+  - **Hero dots** `target-size`: 9px dots -> **24px tap targets spaced 26px** apart (visible 9px circle unchanged; dots sit ~3px wider apart). Lighthouse `target-size` resolved.
+  - **Hero image srcset**: dropped the unused 3840w variant.
+  - Re-ran Lighthouse (authenticated): **Accessibility 0.97** (was 0.93). Only remaining: footer "Powered by Shopify" link contrast **4.29** (theme boilerplate) - documented.
+  - Performance note: LCP/SI are dominated by **Shopify platform JS** (Web Pixels Manager, analytics, account) + the preview bar; images are **already served as WebP** (hero ~66KB), so there is little image headroom left.
+  - Best Practices (0.73) is driven by platform items (`third-party-cookies`, console noise from Shopify menus / section rendering).
 
 ## Pending / Next Steps
 
