@@ -137,6 +137,12 @@ Shopify store build for a pet foods & items website (test/capability-run project
   - Remaining axe items (documented, not fixed): `heading-order` (theme/content heading pattern), collection facets `list` (theme), `frame-title` = Shopify preview bar (environmental)
   - Verified: meta description present; contact note renders; benefits contrast stays 4.68:1; hero + announcement honour reduced motion; cart add/drawer works; checkout "Checkout disabled (demo)"; no mobile overflow
   - Screenshots: `docs/screenshots/final-home-desktop.png`, `final-home-mobile.png`
+- 2026-10-13 (v15): Shipped + published:
+  - Created a **public GitHub repo** `jewelcruzs0922-dev/FurBuddies` with the whole project (257 files, ~53 MB). Excluded via `.gitignore`: `node_modules`, `.chrome-profile`, `.playwright-mcp`, `.env*`, logs, and session-capture artifacts. Email removed from `PROJECT.md`.
+  - Added `README.md` (portfolio-facing overview + demo link + disclaimers).
+  - **Published the draft theme** (id `188756754665`) as the live/main theme and **renamed it "FurBuddies"**. The original `Horizon` theme is now an unpublished draft (kept, not deleted).
+  - Storefront is now served at the clean URL `https://pet-pantry-test.myshopify.com/` (still **password-protected**; **checkout disabled**).
+  - Portfolio card: **View Live** -> clean URL, **View Code** -> the repo; committed + pushed to the portfolio repo (Vercel auto-deploy).
 
 ## Pending / Next Steps
 
