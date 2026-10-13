@@ -81,6 +81,12 @@ The theme was assembled and iterated programmatically and then verified in the b
 - QA used a real browser (Playwright), plus **axe-core** for accessibility checks.
 - The build log in `PROJECT.md` records each phase (audit → design → catalog → safeguards → QA → polish → final audit).
 
+## Portfolio
+
+This project is featured on my [portfolio](https://portfolio-flame-eta-50.vercel.app#projects).
+
+![Portfolio card](docs/screenshots/portfolio-card-desktop.png)
+
 ## Notes & disclaimers
 
 - Fictional "FurBuddies" brand; all content is illustrative and not a real business.

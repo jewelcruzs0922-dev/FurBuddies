@@ -143,6 +143,13 @@ Shopify store build for a pet foods & items website (test/capability-run project
   - **Published the draft theme** (id `188756754665`) as the live/main theme and **renamed it "FurBuddies"**. The original `Horizon` theme is now an unpublished draft (kept, not deleted).
   - Storefront is now served at the clean URL `https://pet-pantry-test.myshopify.com/` (still **password-protected**; **checkout disabled**).
   - Portfolio card: **View Live** -> clean URL, **View Code** -> the repo; committed + pushed to the portfolio repo (Vercel auto-deploy).
+- 2026-10-13 (v16): Final polish + cleanup:
+  - Deleted test artifacts: product `FUR-PROBE-BARE` and collection `FUR-PROBE-TEMP` (now 24 products; probe search returns none)
+  - Fixed homepage **heading-order** (a11y): section headings "Shop by pet" / "Featured favorites" / "Popular categories" / "More to explore" changed from `h3` to `h2` with size-preserving presets (`rte`->`h3`, `h4` kept). Homepage axe now clean except the Shopify preview-bar iframe.
+  - Added `LICENSE` (MIT, (c) 2026 Jewel Cruz) and a Portfolio section (with card screenshot) to the README.
+  - Regenerated portfolio screenshots (`docs/screenshots/portfolio-card-desktop.png`, `-mobile.png`).
+  - Known theme-inherent axe nits left as-is (documented): collection-page heading-order (product titles at level 3) and facets `list` (`ul[part="list"]` containing `accordion-custom`). Fixing needs risky Horizon component edits.
+  - Theme Check still unavailable (no Shopify CLI / Ruby); Lighthouse still only reaches the password page.
 
 ## Pending / Next Steps
 
