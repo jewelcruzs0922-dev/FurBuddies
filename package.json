@@ -1,0 +1,11 @@
+{
+  "name": "pet-pantry-store",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "observe": "node scripts/observe.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.64.0"
+  }
+}

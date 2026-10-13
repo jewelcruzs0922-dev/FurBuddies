@@ -1,0 +1,25 @@
+# dependencies
+/node_modules
+
+# logs
+*.log
+npm-debug.log*
+
+# os
+.DS_Store
+
+# chrome automation profile
+/.chrome-profile/
+
+# env
+.env*
+!.env.example
+
+# session/secret capture artifacts (may contain CSRF tokens / cookies / session ids)
+captured-*.json
+scripts/captured-upsert.json
+last-media-id.txt
+valid-images.json
+
+# browser automation artifacts (may contain session cookies + console logs)
+/.playwright-mcp/

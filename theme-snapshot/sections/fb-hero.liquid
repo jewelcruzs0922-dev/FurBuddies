@@ -1,0 +1,349 @@
+{%- comment -%}
+  FurBuddies hero - full-bleed image slideshow with cross-fade (portfolio demo).
+  Autoplays continuously with no hover pause and no arrows or play/pause controls.
+  Dots let visitors jump between slides.
+{%- endcomment -%}
+
+<div
+  class="fb-hero"
+  data-fb-hero
+  data-autoplay="{{ section.settings.autoplay }}"
+  role="region"
+  aria-label="{{ section.settings.aria_label | default: 'Featured' }}"
+  style="--fb-hero-height: {{ section.settings.height }}px; --fb-hero-heading-size: {{ section.settings.heading_size }}px;"
+>
+  {%- for block in section.blocks -%}
+    {%- liquid
+      if forloop.first
+        assign img_loading = 'eager'
+        assign img_priority = 'high'
+      else
+        assign img_loading = 'lazy'
+        assign img_priority = 'low'
+      endif
+      assign img_alt = block.settings.image.alt
+    -%}
+    <div
+      class="fb-hero__slide{% if forloop.first %} is-active{% endif %}"
+      data-slide="{{ forloop.index0 }}"
+      aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+      {% unless forloop.first %}inert{% endunless %}
+      {{ block.shopify_attributes }}
+    >
+      <div class="fb-hero__media">
+        {%- if block.settings.image -%}
+          {{
+            block.settings.image
+            | image_url: width: 3840
+            | image_tag:
+              widths: '600, 900, 1200, 1600, 2000, 2560, 3840',
+              sizes: '100vw',
+              class: 'fb-hero__img',
+              alt: img_alt,
+              loading: img_loading,
+              fetchpriority: img_priority
+          }}
+        {%- endif -%}
+        <span class="fb-hero__overlay" aria-hidden="true"></span>
+      </div>
+      <div class="fb-hero__content">
+        <div class="fb-hero__inner">
+          {%- if block.settings.eyebrow != blank -%}
+            <p class="fb-hero__eyebrow">{{ block.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          {%- if block.settings.heading != blank -%}
+            <p class="fb-hero__heading">{{ block.settings.heading | escape }}</p>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <p class="fb-hero__text">{{ block.settings.text | escape }}</p>
+          {%- endif -%}
+          {%- if block.settings.button_label != blank -%}
+            <a class="fb-hero__button" href="{{ block.settings.button_link | default: '#' }}">
+              {{- block.settings.button_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  {%- endfor -%}
+
+  {%- if section.blocks.size > 1 -%}
+    <div class="fb-hero__dots">
+      {%- for block in section.blocks -%}
+        <button
+          type="button"
+          class="fb-hero__dot{% if forloop.first %} is-active{% endif %}"
+          data-slide="{{ forloop.index0 }}"
+          aria-label="Show slide {{ forloop.index }}"
+        ></button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% raw %}
+  <script>
+    (function () {
+      function init(root) {
+        if (!root || root.dataset.fbHeroReady === 'true') return;
+        root.dataset.fbHeroReady = 'true';
+
+        var slides = Array.prototype.slice.call(root.querySelectorAll('.fb-hero__slide'));
+        var dots = Array.prototype.slice.call(root.querySelectorAll('.fb-hero__dot'));
+        if (slides.length < 2) return;
+
+        var seconds = parseFloat(root.getAttribute('data-autoplay')) || 3.5;
+        var index = 0;
+        for (var s = 0; s < slides.length; s++) {
+          if (slides[s].classList.contains('is-active')) { index = s; break; }
+        }
+
+        var timer = null;
+        var reduceMotion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+
+        function render() {
+          slides.forEach(function (slide, i) {
+            var active = i === index;
+            slide.classList.toggle('is-active', active);
+            slide.setAttribute('aria-hidden', active ? 'false' : 'true');
+            if (active) { slide.removeAttribute('inert'); } else { slide.setAttribute('inert', ''); }
+          });
+          dots.forEach(function (dot, i) {
+            dot.classList.toggle('is-active', i === index);
+          });
+        }
+
+        function stop() {
+          if (timer) { window.clearInterval(timer); timer = null; }
+        }
+
+        function start() {
+          stop();
+          if (reduceMotion && reduceMotion.matches) return;
+          timer = window.setInterval(function () {
+            if (document.hidden) return;
+            index = (index + 1) % slides.length;
+            render();
+          }, Math.round(seconds * 1000));
+        }
+
+        dots.forEach(function (dot) {
+          dot.addEventListener('click', function () {
+            index = parseInt(dot.getAttribute('data-slide'), 10) || 0;
+            render();
+            start();
+          });
+        });
+
+        if (reduceMotion && reduceMotion.addEventListener) {
+          reduceMotion.addEventListener('change', function () {
+            if (reduceMotion.matches) { stop(); } else { start(); }
+          });
+        }
+
+        render();
+        start();
+      }
+
+      function initAll(scope) {
+        (scope || document).querySelectorAll('.fb-hero').forEach(init);
+      }
+
+      initAll(document);
+      document.addEventListener('shopify:section:load', function (event) {
+        initAll(event.target);
+      });
+    })();
+  </script>
+{% endraw %}
+
+{% stylesheet %}
+  .fb-hero {
+    position: relative;
+    width: 100%;
+    height: min(var(--fb-hero-height, 720px), 92vh);
+    overflow: hidden;
+    background-color: #1f1f1f;
+  }
+
+  .fb-hero__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.9s ease-in-out;
+    pointer-events: none;
+  }
+
+  .fb-hero__slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+  }
+
+  .fb-hero__media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .fb-hero__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .fb-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.62) 0%,
+      rgba(0, 0, 0, 0.34) 45%,
+      rgba(0, 0, 0, 0.16) 100%
+    );
+  }
+
+  .fb-hero__content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+  }
+
+  .fb-hero__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    width: 100%;
+    padding-inline: 48px;
+    text-align: start;
+  }
+
+  .fb-hero__eyebrow {
+    margin: 0;
+    color: #f5f1ea;
+    font-size: 0.8125rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .fb-hero__heading {
+    margin: 0;
+    max-width: 16ch;
+    color: #ffffff;
+    font-family: var(--font-heading--family);
+    font-weight: 700;
+    line-height: 1.05;
+    font-size: var(--fb-hero-heading-size, 56px);
+    text-wrap: balance;
+  }
+
+  .fb-hero__text {
+    margin: 0;
+    max-width: 42ch;
+    color: #f5f1ea;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .fb-hero__button {
+    margin-block-start: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.6rem;
+    border: 1px solid #ffffff;
+    border-radius: 14px;
+    background: transparent;
+    color: #ffffff;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .fb-hero__button:hover {
+    background: #ffffff;
+    color: #1f1f1f;
+  }
+
+  .fb-hero__dots {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 18px;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .fb-hero__dot {
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .fb-hero__dot.is-active {
+    background: #ffffff;
+    transform: scale(1.15);
+  }
+
+  @media screen and (max-width: 749px) {
+    .fb-hero {
+      height: min(var(--fb-hero-height, 720px), 78vh);
+    }
+
+    .fb-hero__inner {
+      padding-inline: 20px;
+      gap: 10px;
+    }
+
+    .fb-hero__heading {
+      max-width: 18ch;
+      font-size: clamp(2rem, 8.5vw, 2.75rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fb-hero__slide {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Fade hero",
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "text", "id": "text", "label": "Text" },
+        { "type": "text", "id": "button_label", "label": "Button label" },
+        { "type": "url", "id": "button_link", "label": "Button link" }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "text", "id": "aria_label", "label": "Accessible label", "default": "Featured" },
+    { "type": "range", "id": "height", "label": "Height", "min": 320, "max": 900, "step": 10, "unit": "px", "default": 720 },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 28, "max": 80, "step": 2, "unit": "px", "default": 56 },
+    { "type": "range", "id": "autoplay", "label": "Autoplay interval", "min": 1, "max": 10, "step": 0.5, "unit": "s", "default": 3.5 }
+  ],
+  "presets": [
+    { "name": "Fade hero" }
+  ]
+}
+{% endschema %}
