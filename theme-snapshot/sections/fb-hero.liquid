@@ -277,21 +277,31 @@
     z-index: 3;
     display: flex;
     justify-content: center;
-    gap: 12px;
+    gap: 0;
   }
 
   .fb-hero__dot {
-    width: 9px;
-    height: 9px;
+    width: 24px;
+    height: 24px;
+    margin-inline: -1.5px;
     padding: 0;
     border: 0;
+    background: transparent;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+
+  .fb-hero__dot::before {
+    content: "";
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.45);
-    cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease;
   }
 
-  .fb-hero__dot.is-active {
+  .fb-hero__dot.is-active::before {
     background: #ffffff;
     transform: scale(1.15);
   }

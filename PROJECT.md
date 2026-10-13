@@ -150,6 +150,15 @@ Shopify store build for a pet foods & items website (test/capability-run project
   - Regenerated portfolio screenshots (`docs/screenshots/portfolio-card-desktop.png`, `-mobile.png`).
   - Known theme-inherent axe nits left as-is (documented): collection-page heading-order (product titles at level 3) and facets `list` (`ul[part="list"]` containing `accordion-custom`). Fixing needs risky Horizon component edits.
   - Theme Check still unavailable (no Shopify CLI / Ruby); Lighthouse still only reaches the password page.
+- 2026-10-13 (v17): Lighthouse on the **real storefront** (authenticated via the storefront password; cookie passed to Lighthouse, not stored):
+  - Mobile scores: **Performance 0.55 · Accessibility 0.93 · Best Practices 0.73 · SEO 1.0**. Metrics: FCP 3.9s, LCP 8.7s, TBT 180ms, CLS 0, SI 13.9s.
+  - **Fixed:** hero dots failed `target-size` (9px). Now a 24x24 hit area with a 9px visible dot (visual unchanged). axe `target-size` gone.
+  - **Documented (not fixed; brand/scope decisions):**
+    - CTA button "Shop the collection": #ffffff on #c67b5c = **3.28** (fails AA). Fix: darker terracotta (e.g. #a8603f) or dark text - changes brand colour.
+    - Footer "Powered by Shopify" link: #777573 on #faf7f2 = **4.29** (marginal).
+    - Best Practices fails are platform/environmental: `third-party-cookies`, `errors-in-console` (Shopify menus / section rendering), `inspector-issues`.
+    - Performance: LCP 8.7s driven by large hero **PNG** images; the main lever is image optimization (resize/WebP).
+  - Caveat: results are mobile-emulated and include the Shopify preview bar, so some console/third-party noise is platform-side.
 
 ## Pending / Next Steps
 
